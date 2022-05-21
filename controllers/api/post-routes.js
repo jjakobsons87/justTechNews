@@ -7,7 +7,12 @@ const sequelize = require('../../config/connection');
 router.get('/', (req, res) => {
     console.log("======================");
     Post.findAll({
-        attributes: ['id', 'post_url', 'title', 'created_at', [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
+        attributes: [
+            'id', 
+            'post_url', 
+            'title', 
+            'created_at', 
+            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
         include: [
             {
             model: Comment,
@@ -17,11 +22,12 @@ router.get('/', (req, res) => {
                 model: User,
                 attributes: ['username']
                 }
+            },
+            {
+                model: User,
+                attributes: ['username']
             }
-        ],
-        order: [['created_at', 'DESC']],
-        
-        
+        ]
     })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
