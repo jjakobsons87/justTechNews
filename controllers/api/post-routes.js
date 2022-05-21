@@ -42,7 +42,12 @@ router.get('/:id', (req, res) => {
         where: {
             id: req.params.id
         },
-        attributes: ['id', 'post_url', 'title', 'created_at', [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
+        attributes: [
+            'id', 
+            'post_url', 
+            'title', 
+            'created_at', 
+            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
         include: [
             {
             model: Comment,
@@ -52,8 +57,12 @@ router.get('/:id', (req, res) => {
                 model: User,
                 attributes: ['username']
                 }
+            },
+            {
+                model: User,
+                attributes: ['username']
             }
-        ],
+        ]
     })
     .then(dbPostData => {
         if (!dbPostData) {
@@ -70,6 +79,7 @@ router.get('/:id', (req, res) => {
 
 // Create a post 
 router.post('/', (req, res) => {
+    // expects Title, posturl, and user id in the call 
     Post.create({
         title: req.body.title,
         post_url: req.body.post_url,
@@ -84,7 +94,7 @@ router.post('/', (req, res) => {
 
 // PUT /api/posts/upvote 
 router.put('/upvote', (req, res) => {
-    Post.upvote(req.body, { Vote, Comment, User })
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
         .then(updatedPostData => res.json(updatedPostData))
         .catch(err => {
             console.log(err);
