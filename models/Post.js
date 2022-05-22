@@ -22,18 +22,18 @@ class Post extends Model {
                     ]
                 ],
                 include: [
-            {
-            model: models.Comment,
-            attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-            include: {
-                model: models.User,
-                attributes: ['username']
-            }
-            }
-        ]
+                {
+                    model: models.Comment,
+                    attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                    include: {
+                        model: models.User,
+                        attributes: ['username']
+                    }
+                }
+            ]
+            });
         });
-    });
-}
+    }
 }
 
 // create fields/columns for Post model 
