@@ -1,17 +1,10 @@
 const router = require('express').Router();
 const req = require('express/lib/request');
 const { Comment, User } = require('../../models');
+const withAuth = require("../../utils/auth");
 
 router.get('/', (req, res) => {
-    Comment.findAll({
-        attributes: ['id', 'post_id', 'comment_text'],
-        include: [
-            {
-                model: User,
-                attributes: ['username']
-            }
-        ]
-    })
+    Comment.findAll()
     .then(dbCommentData => res.json(dbCommentData))
     .catch(err => {
         console.log(err);
@@ -19,11 +12,13 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
+    // check the session 
     Comment.create({
         comment_text: req.body.comment_text,
-        user_id: req.body.user_id,
-        post_id: req.body.post_id
+        post_id: req.body.post_id,
+        // use the id from the session 
+        user_id: req.session.user_id
     })
     .then(dbCommentData => res.json(dbCommentData))
     .catch(err => {
@@ -32,7 +27,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
     Comment.destroy({
         where: {
             id: req.params.comment_id
