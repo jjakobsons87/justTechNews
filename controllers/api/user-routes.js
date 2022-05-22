@@ -93,7 +93,6 @@ router.post('/login', (req, res) => {
             res.status(400).json({ message: 'No user with that email address!' });
             return;
         }
-
         //  Verify user and check the password 
         const validPassword = dbUserData.checkPassword(req.body.password);
         // if the password does not match, return incorrect password - if it does, skip over 

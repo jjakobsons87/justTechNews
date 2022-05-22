@@ -53,8 +53,7 @@ router.get('/:id', (req, res) => {
             {
             model: Comment,
             attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-            include: 
-                {
+            include: {
                 model: User,
                 attributes: ['username']
                 }
@@ -81,32 +80,28 @@ router.get('/:id', (req, res) => {
 // Create a post 
 router.post('/', withAuth, (req, res) => {
     // expects Title, posturl, and user id in the call 
-    if (req.session) {
-        Post.create({
-            title: req.body.title,
-            post_url: req.body.post_url,
-            user_id: req.session.user_id
-        })
-        .then(dbPostData => res.json(dbPostData))
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-    }
+    Post.create({
+        title: req.body.title,
+        post_url: req.body.post_url,
+        user_id: req.session.user_id
+    })
+    .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
 });
 
 // PUT /api/posts/upvote 
 router.put('/upvote', withAuth, (req, res) => {
     // makes sure the session exists first 
-    if (req.session) {
         // pass session id along with all destructured properties on req.body 
-        Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
-            .then(updatedPostData => res.json(updatedPostData))
-            .catch(err => {
-                console.log(err);
-                res.status(400).json(err);
-        });
-    }
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
+        .then(updatedPostData => res.json(updatedPostData))
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+    });
 });
 
 // update a post 
@@ -136,6 +131,7 @@ router.put('/:id', withAuth, (req, res) => {
 
 // delete a post 
 router.delete('/:id', withAuth, (req, res) => {
+    console.log("id", req.params.id);
     Post.destroy({
         where: {
             id: req.params.id
