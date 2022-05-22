@@ -80,16 +80,18 @@ router.get('/:id', (req, res) => {
 // Create a post 
 router.post('/', (req, res) => {
     // expects Title, posturl, and user id in the call 
-    Post.create({
-        title: req.body.title,
-        post_url: req.body.post_url,
-        user_id: req.body.user_id
-    })
-    .then(dbPostData => res.json(dbPostData))
-    .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-    });
+    if (req.session) {
+        Post.create({
+            title: req.body.title,
+            post_url: req.body.post_url,
+            user_id: req.body.user_id
+        })
+        .then(dbPostData => res.json(dbPostData))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+    }
 });
 
 // PUT /api/posts/upvote 
