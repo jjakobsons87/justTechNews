@@ -2,7 +2,7 @@ const router = require('express').Router();
 const req = require('express/lib/request');
 const { Post, User, Vote, Comment } = require('../../models');
 const sequelize = require('../../config/connection');
-const withAuth = require("../utils/auth");
+const withAuth = require("../../utils/auth");
 
 // get all posts
 router.get('/', (req, res) => {

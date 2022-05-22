@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const req = require('express/lib/request');
 const { Comment, User } = require('../../models');
-const withAuth = require("../utils/auth");
+const withAuth = require("../../utils/auth");
 
 router.get('/', (req, res) => {
     Comment.findAll({

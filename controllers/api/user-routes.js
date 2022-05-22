@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const res = require('express/lib/response');
 const { User, Post, Vote, Comment } = require('../../models');
-const withAuth = require("../utils/auth");
+// const withAuth = require("../utils/auth");
 
 // GET /api/users
 router.get('/', (req, res) => {
@@ -59,7 +59,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/users
-router.post('/', withAuth, (req, res) => {
+router.post('/', (req, res) => {
     // expects {username: 'Lernantino', email: 'lerantino@gmail.com', password: 'password1234'}
     User.create({
         username: req.body.username,
@@ -148,7 +148,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/users/1
-router.delete('/:id', withAuth, (req, res) => {
+router.delete('/:id', (req, res) => {
     User.destroy({
         where: {
             id: req.params.id
